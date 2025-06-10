@@ -71,15 +71,10 @@ export const Task: FC<Props> = ({ task, onDelete, onEdit }) => {
                     e.stopPropagation()
                     onDelete(task.id)
                 }}
-                style={{
-                    flexShrink: 0,
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                }}
+                type="button"
+                className="btn btn-outline-danger btn-sm"
             >
-                🗑️
+                Delete
             </button>
         </div>
     )

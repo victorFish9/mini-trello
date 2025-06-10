@@ -8,7 +8,7 @@ interface ColumnProps {
     tasks: TaskType[]
     onAddTask: (columnId: string, content: string) => void
     onDeleteTask: (columnId: string, taskId: string) => void
-    onEditTask: (columnId: string, content: string) => void
+    onEditTask: (columnId: string, newContent: string) => void
 }
 
 export const Column: FC<ColumnProps> = ({ column, tasks, onAddTask, onDeleteTask, onEditTask }) => {
@@ -34,12 +34,14 @@ export const Column: FC<ColumnProps> = ({ column, tasks, onAddTask, onDeleteTask
     return (
         <div ref={setNodeRef} style={columnStyle}>
             <h3 style={{ textAlign: "center", marginBottom: "10px" }}>{column.title}</h3>
-            <input value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="New Task" style={{ flex: 1, padding: "4px" }} />
-            <button onClick={handleAdd}>+</button>
+            <div className="d-flex gap-2 mb-2">
+                <input value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="New Task" style={{ flex: 1, padding: "4px" }} className="form-control" />
+                <button onClick={handleAdd} type="button" className="btn btn-outline-success btn-sm">Add</button>
+            </div>
             {tasks.map((task) => (
                 <Task key={task.id}
                     task={task}
-                    onEdit={(taskId) => onEditTask(column.id, taskId)}
+                    onEdit={(taskId, newContent) => onEditTask(taskId, newContent)}
                     onDelete={(taskId) => onDeleteTask(column.id, taskId)} />
             ))}
         </div>
