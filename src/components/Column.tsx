@@ -7,9 +7,10 @@ interface ColumnProps {
     column: ColumnType
     tasks: TaskType[]
     onAddTask: (columnId: string, content: string) => void
+    onDeleteTask: (columnId: string, taskId: string) => void
 }
 
-export const Column: FC<ColumnProps> = ({ column, tasks, onAddTask }) => {
+export const Column: FC<ColumnProps> = ({ column, tasks, onAddTask, onDeleteTask }) => {
     const { setNodeRef, isOver } = useDroppable({
         id: column.id
     })
@@ -35,7 +36,10 @@ export const Column: FC<ColumnProps> = ({ column, tasks, onAddTask }) => {
             <input value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="New Task" style={{ flex: 1, padding: "4px" }} />
             <button onClick={handleAdd}>+</button>
             {tasks.map((task) => (
-                <Task key={task.id} task={task} />
+                <Task key={task.id}
+                    task={task}
+                    columnId={column.id}
+                    onDelete={(taskId) => onDeleteTask(column.id, taskId)} />
             ))}
         </div>
     )

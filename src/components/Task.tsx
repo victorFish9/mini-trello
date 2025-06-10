@@ -4,9 +4,11 @@ import { useDraggable } from "@dnd-kit/core"
 
 interface TaskProps {
     task: TaskType
+    onDelete: (taskId: string) => void
+    columnId: string
 }
 
-export const Task: FC<TaskProps> = ({ task }) => {
+export const Task: FC<TaskProps> = ({ task, onDelete }) => {
 
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: task.id
@@ -26,7 +28,16 @@ export const Task: FC<TaskProps> = ({ task }) => {
 
     return (
         <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            {task.content}
+            <span>{task.content}</span>
+            <button
+                onClick={(e) => {
+                    e.stopPropagation()
+                    console.log("Delete button clicked", task.id)
+                    onDelete(task.id)
+                }}
+            >
+                Delete
+            </button>
         </div>
     )
 }

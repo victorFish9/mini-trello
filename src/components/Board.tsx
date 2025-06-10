@@ -51,6 +51,10 @@ const Board: FC = () => {
         console.log(`Moved ${active.id} to ${over.id}`)
     }
 
+    const handleDeleteTask = (columnId: string, taskId: string) => {
+        dispatch({ type: "DELETE_TASK", payload: { columnId, taskId } })
+    }
+
     const handleAddTaask = (columnId: string, content: string) => {
         dispatch({ type: "ADD_TASK", payload: { columnId, content } })
     }
@@ -62,7 +66,7 @@ const Board: FC = () => {
                     const column = state.columns[columnId]
                     const tasks = column.taskIds.map((taskId) => state.tasks[taskId])
 
-                    return <Column key={column.id} column={column} tasks={tasks} onAddTask={handleAddTaask} />
+                    return <Column key={column.id} column={column} tasks={tasks} onAddTask={handleAddTaask} onDeleteTask={handleDeleteTask} />
                 })}
             </div>
         </DndContext>
