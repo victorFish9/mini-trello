@@ -38,7 +38,7 @@ export const Column: FC<ColumnProps> = ({ column, tasks, onAddTask, onDeleteTask
             {tasks.map((task) => (
                 <Task key={task.id}
                     task={task}
-                    columnId={column.id}
+                    // columnId={column.id}
                     onDelete={(taskId) => onDeleteTask(column.id, taskId)} />
             ))}
         </div>
