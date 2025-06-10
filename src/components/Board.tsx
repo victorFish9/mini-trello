@@ -59,6 +59,10 @@ const Board: FC = () => {
         dispatch({ type: "ADD_TASK", payload: { columnId, content } })
     }
 
+    const handleEditTask = (taskId: string, newContent: string) => {
+        dispatch({ type: "EDIT_TASK", payload: { taskId, newContent } })
+    }
+
     return (
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <div style={{ display: "flex", gap: "16px", padding: "20px" }}>
@@ -66,7 +70,7 @@ const Board: FC = () => {
                     const column = state.columns[columnId]
                     const tasks = column.taskIds.map((taskId) => state.tasks[taskId])
 
-                    return <Column key={column.id} column={column} tasks={tasks} onAddTask={handleAddTaask} onDeleteTask={handleDeleteTask} />
+                    return <Column key={column.id} column={column} tasks={tasks} onAddTask={handleAddTaask} onDeleteTask={handleDeleteTask} onEditTask={handleEditTask} />
                 })}
             </div>
         </DndContext>

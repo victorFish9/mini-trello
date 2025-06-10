@@ -1,8 +1,10 @@
 import type { BoardData } from "../types/types";
 
-type Action = | { type: "MOVE_TASK"; payload: { taskId: string; sourceColId: string; destColId: string } } |
-{ type: "ADD_TASK"; payload: { columnId: string; content: string; } } |
-{ type: "DELETE_TASK"; payload: { taskId: string; columnId: string; } }
+type Action =
+    | { type: "MOVE_TASK"; payload: { taskId: string; sourceColId: string; destColId: string } }
+    | { type: "ADD_TASK"; payload: { columnId: string; content: string; } }
+    | { type: "DELETE_TASK"; payload: { taskId: string; columnId: string; } }
+    | { type: "EDIT_TASK"; payload: { taskId: string; newContent: string; } }
 
 
 export const boardReducer = (state: BoardData, action: Action): BoardData => {
@@ -63,6 +65,20 @@ export const boardReducer = (state: BoardData, action: Action): BoardData => {
                     [columnId]: {
                         ...state.columns[columnId],
                         taskIds: state.columns[columnId].taskIds.filter(id => id !== taskId)
+                    }
+                }
+            }
+        }
+
+        case "EDIT_TASK": {
+            const { taskId, newContent } = action.payload
+            return {
+                ...state,
+                tasks: {
+                    ...state.tasks,
+                    [taskId]: {
+                        ...state.tasks[taskId],
+                        content: newContent,
                     }
                 }
             }

@@ -1,16 +1,22 @@
-import type { FC } from "react"
+import { useState, type FC } from "react"
 import type { Task as TaskType } from "../types/types"
 import { useDraggable } from "@dnd-kit/core"
 
 type Props = {
     task: TaskType
     onDelete: (taskId: string) => void
+    onEdit: (taskId: string, newContent: string) => void
 }
 
-export const Task: FC<Props> = ({ task, onDelete }) => {
+export const Task: FC<Props> = ({ task, onDelete, onEdit }) => {
+    const [isEditing, setIsEditing] = useState(false)
+    const [editText, setEditText] = useState(task.content)
+
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: task.id
+        id: task.id,
+        disabled: isEditing
     })
+
 
     const style = {
         backgroundColor: "white",
@@ -28,6 +34,13 @@ export const Task: FC<Props> = ({ task, onDelete }) => {
         gap: "8px"
     }
 
+    const handleSave = () => {
+        if (editText.trim() !== "") {
+            onEdit(task.id, editText.trim())
+        }
+        setIsEditing(false)
+    }
+
     return (
         <div ref={setNodeRef} style={style} className="task">
             <div
@@ -35,14 +48,27 @@ export const Task: FC<Props> = ({ task, onDelete }) => {
                 {...listeners}
                 style={{ flexGrow: 1, cursor: "grab", wordBreak: "break-word" }}
             >
-                <div>
-                    <span>{task.content}</span>
-                </div>
+                {isEditing ? (
+                    <input
+                        autoFocus
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        onBlur={handleSave}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSave()
+                            if (e.key === "Escape") setIsEditing(false)
+                        }}
+                        style={{ width: "100%", fontSize: "14px" }}
+                    />
+                ) : (
+                    <div onDoubleClick={() => setIsEditing(true)}>
+                        <span>{task.content}</span>
+                    </div>
+                )}
             </div>
             <button
                 onClick={(e) => {
                     e.stopPropagation()
-                    console.log("Delete button clicked", task.id)
                     onDelete(task.id)
                 }}
                 style={{
@@ -50,11 +76,12 @@ export const Task: FC<Props> = ({ task, onDelete }) => {
                     background: "none",
                     border: "none",
                     cursor: "pointer",
-                    fontSize: "16px"
+                    fontSize: "16px",
                 }}
             >
                 🗑️
             </button>
         </div>
     )
+
 }
